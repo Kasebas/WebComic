@@ -1,5 +1,74 @@
-<swiper-container [config]="swiperConfig">
-  <swiper-slide *ngFor="let page of comicPages">
-    <img [src]="page" class="comic-page" alt="Comic Page">
-  </swiper-slide>
-</swiper-container>
+<div class="comic-viewer" *ngIf="!isLoading">
+  <!-- Header con información del cómic -->
+  <header class="comic-header">
+    <button class="back-btn" (click)="backToLibrary()">← Biblioteca</button>
+    <div class="comic-info">
+      <h2 class="comic-title">{{ comic?.title }}</h2>
+      <h3 class="chapter-title" *ngIf="currentChapter">
+        Capítulo {{ currentChapter.chapterNumber }}: {{ currentChapter.title }}
+      </h3>
+    </div>
+    <div class="page-counter">
+      {{ getCurrentPageNumber() }} / {{ getTotalPages() }}
+    </div>
+  </header>
+
+  <!-- Visor principal -->
+  <div class="viewer-container">
+    <swiper-container 
+      [config]="swiperConfig" 
+      (slidechange)="onSlideChange($event)"
+      [initial-slide]="currentPageIndex">
+      
+      <swiper-slide *ngFor="let page of currentChapter?.pages">
+        <div class="page-container">
+          <img 
+            [src]="page.imageUrl" 
+            [alt]="page.altText || 'Página ' + page.pageNumber"
+            class="comic-page" 
+            loading="lazy">
+          
+          <!-- Elementos interactivos si los hay -->
+          <div 
+            *ngFor="let element of page.interactiveElements" 
+            class="interactive-element"
+            [style.left.%]="element.position.x"
+            [style.top.%]="element.position.y"
+            [style.width.%]="element.position.width"
+            [style.height.%]="element.position.height">
+            <!-- Aquí irían los elementos interactivos -->
+          </div>
+        </div>
+      </swiper-slide>
+    </swiper-container>
+  </div>
+
+  <!-- Controles de navegación entre capítulos -->
+  <footer class="comic-controls">
+    <button 
+      class="chapter-nav-btn prev"
+      [disabled]="isFirstChapter()"
+      (click)="goToPreviousChapter()">
+      ← Capítulo Anterior
+    </button>
+    
+    <div class="chapter-info">
+      <span *ngIf="currentChapter">
+        Capítulo {{ currentChapter.chapterNumber }} de {{ comic?.totalChapters }}
+      </span>
+    </div>
+    
+    <button 
+      class="chapter-nav-btn next"
+      [disabled]="isLastChapter()"
+      (click)="goToNextChapter()">
+      Siguiente Capítulo →
+    </button>
+  </footer>
+</div>
+
+<!-- Loading state -->
+<div class="loading-container" *ngIf="isLoading">
+  <div class="loading-spinner"></div>
+  <p>Cargando cómic...</p>
+</div>

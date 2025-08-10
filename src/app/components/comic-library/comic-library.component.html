@@ -1,0 +1,79 @@
+<div class="comic-library">
+  <header class="library-header">
+    <h1>Biblioteca de Cómics</h1>
+    
+    <!-- Barra de búsqueda -->
+    <div class="search-controls">
+      <div class="search-box">
+        <input 
+          type="text" 
+          [(ngModel)]="searchQuery" 
+          (input)="onSearch()" 
+          placeholder="Buscar cómics..."
+          class="search-input">
+        <button class="search-btn" (click)="onSearch()">🔍</button>
+      </div>
+      
+      <!-- Filtro por género -->
+      <select [(ngModel)]="selectedGenre" (change)="onGenreFilter()" class="genre-filter">
+        <option value="">Todos los géneros</option>
+        <option *ngFor="let genre of genres" [value]="genre">{{ genre }}</option>
+      </select>
+    </div>
+  </header>
+
+  <!-- Grid de cómics -->
+  <div class="comics-grid">
+    <div 
+      *ngFor="let comic of comics$ | async" 
+      class="comic-card"
+      (click)="onComicSelect(comic)">
+      
+      <div class="comic-cover">
+        <img [src]="comic.coverImage" [alt]="comic.title" class="cover-image">
+        <div class="comic-status" [class]="comic.status">{{ comic.status }}</div>
+        
+        <!-- Indicador de progreso -->
+        <div *ngIf="getReadingProgress(comic.id)" class="progress-indicator">
+          <div class="progress-bar">
+            <div 
+              class="progress-fill" 
+              [style.width.%]="getProgressPercentage(comic)">
+            </div>
+          </div>
+          <span class="progress-text">{{ getProgressPercentage(comic) }}%</span>
+        </div>
+      </div>
+      
+      <div class="comic-info">
+        <h3 class="comic-title">{{ comic.title }}</h3>
+        <p class="comic-author">por {{ comic.author }}</p>
+        <p class="comic-description">{{ comic.description }}</p>
+        
+        <div class="comic-meta">
+          <div class="genres">
+            <span *ngFor="let genre of comic.genres" class="genre-tag">{{ genre }}</span>
+          </div>
+          <div class="rating">
+            ⭐ {{ comic.rating }}/5
+          </div>
+          <div class="chapter-count">
+            {{ comic.chapters.length }}/{{ comic.totalChapters }} capítulos
+          </div>
+        </div>
+        
+        <!-- Botón de acción -->
+        <div class="action-button">
+          <button class="read-btn">
+            {{ getReadingProgress(comic.id) ? 'Continuar Leyendo' : 'Empezar a Leer' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensaje cuando no hay cómics -->
+  <div *ngIf="(comics$ | async)?.length === 0" class="no-comics">
+    <p>No se encontraron cómics que coincidan con tu búsqueda.</p>
+  </div>
+</div>
