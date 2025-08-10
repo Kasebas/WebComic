@@ -9,7 +9,7 @@ export const routes: Routes = [
   { path: 'comic/:comicId/chapter/:chapterNumber/page/:pageNumber', component: ComicViewerComponent },
   { path: 'comic/:comicId/chapter/:chapterNumber', component: ComicViewerComponent },
   { path: 'comic/:comicId', component: ComicViewerComponent },
-  { path: 'viewer', component: ComicViewerComponent }, // Para modo demo
+  { path: 'viewer', component: ComicViewerComponent },
   { path: 'novel', component: NovelViewerComponent },
   { path: '**', redirectTo: '/' }
 ];

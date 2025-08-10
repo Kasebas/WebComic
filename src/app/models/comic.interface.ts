@@ -34,15 +34,21 @@ export interface Page {
 
 export interface InteractiveElement {
   id: string;
-  type: 'choice' | 'clickable' | 'animation' | 'sound';
+  type: 'choice' | 'clickable' | 'animation' | 'sound' | 'interactive_story' | 'link' | 'page_jump';
   position: {
     x: number;
     y: number;
     width: number;
     height: number;
   };
-  action: string;
+  action?: string;
   data?: any;
+  // New properties for enhanced interactivity
+  storyId?: string;  // For interactive_story type
+  url?: string;      // For link type
+  targetPage?: number; // For page_jump type
+  title?: string;
+  description?: string;
 }
 
 export interface ReadingProgress {
@@ -59,4 +65,14 @@ export interface UserPreferences {
   animationSpeed: number;
   fontSize: number;
   theme: 'light' | 'dark';
+  zoomLevel: number;
+  fullscreen: boolean;
+  autoProgress: boolean;
+}
+
+export interface ReadingSettings {
+  currentZoom: number;
+  isFullscreen: boolean;
+  readingDirection: 'ltr' | 'rtl';
+  fitMode: 'width' | 'height' | 'original';
 }

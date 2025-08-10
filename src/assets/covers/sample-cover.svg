@@ -1,0 +1,137 @@
+<svg viewBox="0 0 600 800" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="fantasyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2e1065;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#7c3aed;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#a855f7;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="sunsetGlow" cx="50%" cy="30%" r="40%">
+      <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#f59e0b;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#d97706;stop-opacity:0.3" />
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="600" height="800" fill="url(#fantasyGradient)"/>
+
+  <!-- Sunset/Sunrise glow -->
+  <ellipse cx="300" cy="200" rx="200" ry="100" fill="url(#sunsetGlow)" opacity="0.6"/>
+
+  <!-- Mountains backdrop -->
+  <polygon points="0,400 100,200 200,350 300,150 400,300 500,100 600,250 600,800 0,800" fill="#1f2937"/>
+  <polygon points="50,450 150,250 250,380 350,200 450,330 550,150 600,280 600,800 0,800" fill="#111827" opacity="0.7"/>
+
+  <!-- Magical forest -->
+  <ellipse cx="150" cy="500" rx="40" ry="80" fill="#064e3b"/>
+  <ellipse cx="200" cy="520" rx="30" ry="60" fill="#065f46"/>
+  <ellipse cx="100" cy="530" rx="35" ry="70" fill="#064e3b"/>
+  <ellipse cx="300" cy="510" rx="45" ry="85" fill="#065f46"/>
+  <ellipse cx="350" cy="530" rx="25" ry="50" fill="#064e3b"/>
+  <ellipse cx="450" cy="520" rx="40" ry="75" fill="#065f46"/>
+  <ellipse cx="500" cy="540" rx="30" ry="60" fill="#064e3b"/>
+
+  <!-- Magical particles floating -->
+  <circle cx="120" cy="400" r="3" fill="#fbbf24" filter="url(#glow)"/>
+  <circle cx="280" cy="350" r="2" fill="#a78bfa" filter="url(#glow)"/>
+  <circle cx="450" cy="380" r="4" fill="#fb7185" filter="url(#glow)"/>
+  <circle cx="180" cy="320" r="2" fill="#34d399" filter="url(#glow)"/>
+  <circle cx="380" cy="330" r="3" fill="#60a5fa" filter="url(#glow)"/>
+  <circle cx="520" cy="360" r="2" fill="#fbbf24" filter="url(#glow)"/>
+
+  <!-- Central character silhouette -->
+  <g transform="translate(300, 450)">
+    <!-- Hero silhouette -->
+    <ellipse cx="0" cy="80" rx="35" ry="10" fill="#000000" opacity="0.4"/>
+    <rect x="-20" y="20" width="40" height="60" fill="#1f2937"/>
+    <circle cx="0" cy="0" r="18" fill="#4b5563"/>
+    <!-- Cape flowing -->
+    <path d="M -18 25 Q -35 40 -30 70 Q -25 85 -15 80 Q -20 60 -18 40" fill="#7c3aed"/>
+    <path d="M 18 25 Q 35 40 30 70 Q 25 85 15 80 Q 20 60 18 40" fill="#7c3aed"/>
+    <!-- Sword -->
+    <rect x="25" y="-10" width="3" height="40" fill="#d1d5db"/>
+    <rect x="23" y="-15" width="7" height="8" fill="#fbbf24"/>
+  </g>
+
+  <!-- Dragon in the sky -->
+  <g transform="translate(450, 150) scale(0.8)">
+    <path d="M 0 0 Q -20 -10 -40 0 Q -30 10 -20 5 Q -10 8 0 5 Q 20 10 40 0 Q 30 -10 20 -5 Q 10 -8 0 0" fill="#dc2626"/>
+    <polygon points="-50,0 -60,-15 -45,-10 -40,-5" fill="#dc2626"/>
+    <polygon points="50,0 60,-15 45,-10 40,-5" fill="#dc2626"/>
+    <circle cx="-15" cy="-3" r="3" fill="#fbbf24"/>
+    <circle cx="15" cy="-3" r="3" fill="#fbbf24"/>
+  </g>
+
+  <!-- Castle in the distance -->
+  <g transform="translate(100, 300) scale(0.6)">
+    <rect x="0" y="50" width="60" height="100" fill="#374151"/>
+    <polygon points="0,50 30,30 60,50 60,150 0,150" fill="#4b5563"/>
+    <rect x="10" y="70" width="8" height="10" fill="#fbbf24"/>
+    <rect x="25" y="80" width="8" height="10" fill="#fbbf24"/>
+    <rect x="42" y="75" width="8" height="10" fill="#fbbf24"/>
+    <!-- Tower -->
+    <rect x="70" y="20" width="30" height="130" fill="#374151"/>
+    <polygon points="70,20 85,10 100,20 100,150 70,150" fill="#4b5563"/>
+    <rect x="80" y="40" width="6" height="8" fill="#fbbf24"/>
+  </g>
+
+  <!-- Title with magical effect -->
+  <text x="300" y="100" text-anchor="middle" font-family="serif" font-size="42" font-weight="bold" fill="#fbbf24" stroke="#7c3aed" stroke-width="2" filter="url(#glow)">
+    LEYENDAS
+  </text>
+  <text x="300" y="150" text-anchor="middle" font-family="serif" font-size="42" font-weight="bold" fill="#a855f7" stroke="#fbbf24" stroke-width="2" filter="url(#glow)">
+    ÉPICAS
+  </text>
+
+  <!-- Subtitle -->
+  <text x="300" y="180" text-anchor="middle" font-family="serif" font-size="16" fill="#e5e7eb" font-style="italic">
+    Donde nacen las leyendas
+  </text>
+
+  <!-- Magical runes border -->
+  <g stroke="#a78bfa" stroke-width="2" fill="none" opacity="0.7">
+    <circle cx="50" cy="50" r="15"/>
+    <polygon points="45,45 50,35 55,45 50,50"/>
+
+    <circle cx="550" cy="50" r="15"/>
+    <polygon points="545,45 550,35 555,45 550,50"/>
+
+    <circle cx="50" cy="750" r="15"/>
+    <polygon points="45,745 50,735 55,745 50,750"/>
+
+    <circle cx="550" cy="750" r="15"/>
+    <polygon points="545,745 550,735 555,745 550,750"/>
+  </g>
+
+  <!-- Bottom panel -->
+  <rect x="50" y="650" width="500" height="100" fill="rgba(0,0,0,0.7)"/>
+  <text x="300" y="690" text-anchor="middle" font-family="serif" font-size="24" font-weight="bold" fill="#fbbf24">
+    EDICIÓN ESPECIAL
+  </text>
+  <text x="300" y="715" text-anchor="middle" font-family="serif" font-size="18" fill="#a855f7">
+    Aventuras Interactivas
+  </text>
+
+  <!-- Author -->
+  <text x="300" y="740" text-anchor="middle" font-family="serif" font-size="12" fill="#d1d5db">
+    Creado por: Equipo WebComic
+  </text>
+
+  <!-- Ornate border -->
+  <rect x="20" y="20" width="560" height="760" fill="none" stroke="#fbbf24" stroke-width="3"/>
+  <rect x="25" y="25" width="550" height="750" fill="none" stroke="#a855f7" stroke-width="2"/>
+
+  <!-- Corner decorations -->
+  <polygon points="20,20 50,20 35,35" fill="#fbbf24"/>
+  <polygon points="580,20 550,20 565,35" fill="#fbbf24"/>
+  <polygon points="20,780 50,780 35,765" fill="#fbbf24"/>
+  <polygon points="580,780 550,780 565,765" fill="#fbbf24"/>
+</svg>

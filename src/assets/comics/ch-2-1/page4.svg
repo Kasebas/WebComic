@@ -1,0 +1,170 @@
+<svg viewBox="0 0 800 1200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="800" height="1200" fill="#f8f9fa"/>
+
+  <!-- Title -->
+  <text x="400" y="40" text-anchor="middle" font-family="Arial" font-size="18" font-weight="bold" fill="#333">
+    El Misterio del Laboratorio
+  </text>
+
+  <!-- Panel 1 - Laboratory scene -->
+  <rect x="30" y="60" width="740" height="300" fill="#e3f2fd" stroke="#333" stroke-width="3"/>
+
+  <!-- Laboratory equipment -->
+  <rect x="80" y="120" width="100" height="80" fill="#37474f" stroke="#333" stroke-width="2"/>
+  <circle cx="130" cy="140" r="15" fill="#4caf50"/>
+  <circle cx="130" cy="170" r="15" fill="#ff9800"/>
+  <rect x="90" y="190" width="80" height="30" fill="#000000"/>
+  <text x="130" y="210" text-anchor="middle" font-family="monospace" font-size="8" fill="#00ff00">
+    ERROR 404
+  </text>
+
+  <!-- Desk with papers -->
+  <rect x="250" y="180" width="200" height="100" fill="#8d6e63"/>
+  <rect x="270" y="160" width="50" height="60" fill="#ffffff"/>
+  <rect x="330" y="170" width="60" height="40" fill="#ffffff"/>
+  <rect x="400" y="160" width="40" height="50" fill="#ffffff"/>
+
+  <!-- Detective character -->
+  <circle cx="500" cy="200" r="30" fill="#ffdbcb"/>
+  <rect x="480" y="220" width="40" height="60" fill="#795548"/>
+  <circle cx="490" cy="190" r="2" fill="#333"/>
+  <circle cx="510" cy="190" r="2" fill="#333"/>
+  <path d="M 495 210 Q 500 215 505 210" stroke="#333" stroke-width="1" fill="none"/>
+
+  <!-- Magnifying glass -->
+  <circle cx="540" cy="180" r="20" fill="rgba(255,255,255,0.8)" stroke="#333" stroke-width="3"/>
+  <line x1="555" y1="195" x2="570" y2="210" stroke="#333" stroke-width="3"/>
+
+  <!-- Speech bubble -->
+  <ellipse cx="600" cy="120" rx="80" ry="40" fill="#ffffff" stroke="#333" stroke-width="2"/>
+  <polygon points="550,140 520,160 540,155" fill="#ffffff"/>
+  <text x="600" y="115" text-anchor="middle" font-family="Arial" font-size="11" fill="#333">
+    "Algo no cuadra aquí.
+  </text>
+  <text x="600" y="130" text-anchor="middle" font-family="Arial" font-size="11" fill="#333">
+    Demasiado ordenado..."
+  </text>
+
+  <text x="400" y="340" text-anchor="middle" font-family="Arial" font-size="14" fill="#333">
+    El laboratorio del Dr. Elena Voss parece intacto, pero hay señales sutiles...
+  </text>
+
+  <!-- Panel 2 -->
+  <rect x="50" y="380" width="340" height="250" fill="#fff8e1" stroke="#333" stroke-width="3"/>
+
+  <!-- Close-up of evidence -->
+  <rect x="80" y="420" width="80" height="60" fill="#ffffff" transform="rotate(-15 120 450)"/>
+  <text x="120" y="440" text-anchor="middle" font-family="Arial" font-size="8" fill="#333" transform="rotate(-15 120 440)">
+    PROYECTO
+  </text>
+  <text x="120" y="455" text-anchor="middle" font-family="Arial" font-size="8" fill="#333" transform="rotate(-15 120 455)">
+    HELIX
+  </text>
+
+  <!-- Burnt edges -->
+  <path d="M 70 420 Q 65 415 70 410 Q 75 415 80 420" fill="#8d6e63"/>
+  <path d="M 150 470 Q 155 475 160 470 Q 155 465 150 470" fill="#8d6e63"/>
+
+  <!-- Coordinates -->
+  <rect x="200" y="500" width="120" height="40" fill="#e0e0e0"/>
+  <text x="260" y="515" text-anchor="middle" font-family="monospace" font-size="10" fill="#333">
+    42.3601° N
+  </text>
+  <text x="260" y="530" text-anchor="middle" font-family="monospace" font-size="10" fill="#333">
+    71.0589° W
+  </text>
+
+  <text x="220" y="600" text-anchor="middle" font-family="Arial" font-size="12" fill="#333">
+    "Coordenadas misteriosas y
+  </text>
+  <text x="220" y="615" text-anchor="middle" font-family="Arial" font-size="12" fill="#333">
+    una nota parcialmente quemada"
+  </text>
+
+  <!-- Panel 3 -->
+  <rect x="410" y="380" width="340" height="250" fill="#f3e5f5" stroke="#333" stroke-width="3"/>
+
+  <!-- Interactive mystery element -->
+  <rect x="430" y="420" width="300" height="80" fill="rgba(156,39,176,0.2)" stroke="#9c27b0" stroke-width="3" stroke-dasharray="8,4"/>
+  <text x="580" y="445" text-anchor="middle" font-family="Arial" font-size="14" fill="#7b1fa2" font-weight="bold">
+    ¡INVESTIGACIÓN INTERACTIVA!
+  </text>
+  <text x="580" y="465" text-anchor="middle" font-family="Arial" font-size="12" fill="#4a148c">
+    Haz clic para analizar las pistas
+  </text>
+  <text x="580" y="485" text-anchor="middle" font-family="Arial" font-size="12" fill="#4a148c">
+    y resolver el misterio
+  </text>
+
+  <!-- Evidence items -->
+  <circle cx="460" cy="550" r="15" fill="#ff5722"/>
+  <text x="460" y="555" text-anchor="middle" font-family="Arial" font-size="8" fill="#fff">
+    1
+  </text>
+  <text x="460" y="580" text-anchor="middle" font-family="Arial" font-size="8" fill="#333">
+    Nota quemada
+  </text>
+
+  <circle cx="580" cy="550" r="15" fill="#ff5722"/>
+  <text x="580" y="555" text-anchor="middle" font-family="Arial" font-size="8" fill="#fff">
+    2
+  </text>
+  <text x="580" y="580" text-anchor="middle" font-family="Arial" font-size="8" fill="#333">
+    Coordenadas
+  </text>
+
+  <circle cx="700" cy="550" r="15" fill="#ff5722"/>
+  <text x="700" y="555" text-anchor="middle" font-family="Arial" font-size="8" fill="#fff">
+    3
+  </text>
+  <text x="700" y="580" text-anchor="middle" font-family="Arial" font-size="8" fill="#333">
+    Dispositivo faltante
+  </text>
+
+  <text x="580" y="610" text-anchor="middle" font-family="Arial" font-size="12" fill="#333">
+    Conecta las pistas para resolver el caso
+  </text>
+
+  <!-- Bottom panel -->
+  <rect x="50" y="650" width="700" height="300" fill="#e8f5e8" stroke="#333" stroke-width="3"/>
+
+  <!-- Computer screen -->
+  <rect x="150" y="700" width="200" height="120" fill="#000000"/>
+  <text x="250" y="730" text-anchor="middle" font-family="monospace" font-size="12" fill="#00ff00">
+    ARCHIVO ENCRIPTADO
+  </text>
+  <text x="250" y="750" text-anchor="middle" font-family="monospace" font-size="10" fill="#00ff00">
+    Contacto: PHOENIX
+  </text>
+  <text x="250" y="770" text-anchor="middle" font-family="monospace" font-size="10" fill="#00ff00">
+    Reunión: 23:00
+  </text>
+  <text x="250" y="790" text-anchor="middle" font-family="monospace" font-size="10" fill="#00ff00">
+    Ubicación: [CIFRADO]
+  </text>
+  <text x="250" y="810" text-anchor="middle" font-family="monospace" font-size="10" fill="#ff0000">
+    ACCESO DENEGADO
+  </text>
+
+  <!-- Dr. Elena photo -->
+  <rect x="450" y="700" width="80" height="100" fill="#e0e0e0" stroke="#333" stroke-width="2"/>
+  <circle cx="490" cy="730" r="20" fill="#ffdbcb"/>
+  <rect x="470" y="745" width="40" height="35" fill="#1976d2"/>
+  <text x="490" y="820" text-anchor="middle" font-family="Arial" font-size="10" fill="#333">
+    Dr. Elena Voss
+  </text>
+
+  <!-- Detective's conclusion -->
+  <text x="400" y="880" text-anchor="middle" font-family="Arial" font-size="14" fill="#333" font-weight="bold">
+    "No fue un secuestro... Elena sabía algo y huyó"
+  </text>
+  <text x="400" y="910" text-anchor="middle" font-family="Arial" font-size="12" fill="#666">
+    La verdad está en esas coordenadas y en la identidad de "Phoenix"
+  </text>
+
+  <!-- Page number -->
+  <text x="400" y="1150" text-anchor="middle" font-family="Arial" font-size="14" fill="#999">
+    Página 4
+  </text>
+</svg>

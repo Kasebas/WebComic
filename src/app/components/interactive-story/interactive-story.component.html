@@ -1,0 +1,98 @@
+<div class="interactive-story-container">
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>Cargando historia interactiva...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error" class="error-state">
+        <h3>❌ Error</h3>
+        <p>{{ error }}</p>
+        <button class="retry-btn" (click)="initializeStory()">🔄 Reintentar</button>
+    </div>
+
+    <!-- Story Content -->
+    <div *ngIf="!isLoading && !error && storyState" class="story-content">
+        <!-- Story Progress -->
+        <div class="story-progress">
+            <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="getStoryProgress()"></div>
+            </div>
+            <span class="progress-text">{{ getStoryProgress() }}% completado</span>
+        </div>
+
+        <!-- Story History -->
+        <div class="story-history">
+            <div *ngFor="let text of storyHistory; let i = index" class="story-segment"
+                [class.choice-segment]="text.startsWith('>')">
+
+                <div class="story-text" [innerHTML]="getFormattedText(text)"
+                    [class.animate-in]="i === storyHistory.length - 1">
+                </div>
+            </div>
+        </div>
+
+        <!-- Current Choices -->
+        <div *ngIf="hasChoices()" class="choices-container">
+            <h4 class="choices-title">¿Qué decides hacer?</h4>
+            <div class="choices-grid">
+                <button *ngFor="let choice of storyState.choices; let i = index" class="choice-btn"
+                    (click)="onChoiceSelected(choice)" [style.animation-delay.ms]="i * 150">
+
+                    <span class="choice-number">{{ i + 1 }}</span>
+                    <span class="choice-text">{{ choice.text }}</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Continue Button -->
+        <div *ngIf="canContinue() && !hasChoices()" class="continue-container">
+            <button class="continue-btn" (click)="continueStory()">
+                ➤ Continuar
+            </button>
+        </div>
+
+        <!-- Story Complete -->
+        <div *ngIf="isComplete()" class="completion-container">
+            <div class="completion-content">
+                <h3>🎉 ¡Historia Completada!</h3>
+                <p>Has llegado al final de esta aventura interactiva.</p>
+
+                <div class="completion-actions">
+                    <button class="action-btn restart-btn" (click)="restartStory()">
+                        🔄 Volver a Empezar
+                    </button>
+                    <button class="action-btn save-btn" (click)="saveProgress()">
+                        💾 Guardar Progreso
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Story Controls -->
+        <div class="story-controls">
+            <button class="control-btn" (click)="saveProgress()" title="Guardar progreso" [disabled]="isComplete()">
+                💾 Guardar
+            </button>
+
+            <button class="control-btn" (click)="restartStory()" title="Reiniciar historia">
+                🔄 Reiniciar
+            </button>
+        </div>
+
+        <!-- Story Tags -->
+        <div *ngIf="storyState.currentTags && storyState.currentTags.length > 0" class="story-tags">
+            <span *ngFor="let tag of storyState.currentTags" class="story-tag">
+                #{{ tag }}
+            </span>
+        </div>
+    </div>
+
+    <!-- No Story State -->
+    <div *ngIf="!isLoading && !error && !storyState" class="empty-state">
+        <h3>📖 Sin Historia</h3>
+        <p>No se pudo cargar la historia interactiva.</p>
+        <button class="retry-btn" (click)="initializeStory()">🔄 Reintentar</button>
+    </div>
+</div>

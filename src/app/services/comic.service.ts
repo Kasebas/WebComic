@@ -14,7 +14,10 @@ export class ComicService {
     autoplay: false,
     animationSpeed: 500,
     fontSize: 16,
-    theme: 'light'
+    theme: 'light',
+    zoomLevel: 100,
+    fullscreen: false,
+    autoProgress: false
   };
 
   constructor() {
@@ -46,6 +49,10 @@ export class ComicService {
   // Reading Progress
   getReadingProgress(comicId: string): ReadingProgress | null {
     return this.readingProgressMap.get(comicId) || null;
+  }
+
+  getAllReadingProgress(): ReadingProgress[] {
+    return Array.from(this.readingProgressMap.values());
   }
 
   updateReadingProgress(progress: ReadingProgress): void {
@@ -88,7 +95,7 @@ export class ComicService {
         title: 'Aventuras Espaciales',
         author: 'Juan Pérez',
         description: 'Una emocionante aventura en el espacio con elementos interactivos.',
-        coverImage: 'assets/comics/comic-1/cover.jpg',
+        coverImage: 'assets/covers/comic-1.svg',
         genres: ['Sci-Fi', 'Aventura'],
         status: 'ongoing',
         rating: 4.5,
@@ -129,11 +136,11 @@ export class ComicService {
       },
       {
         id: 'comic-2',
-        title: 'Misterios Urbanos',
+        title: 'Misterios y Fantasía',
         author: 'María González',
-        description: 'Historias de misterio en la gran ciudad.',
-        coverImage: 'assets/comics/comic-2/cover.jpg',
-        genres: ['Misterio', 'Drama'],
+        description: 'Historias que combinan misterio detectivesco con aventuras fantásticas.',
+        coverImage: 'assets/covers/comic-2.svg',
+        genres: ['Misterio', 'Fantasía'],
         status: 'completed',
         rating: 4.2,
         totalChapters: 2,
@@ -143,21 +150,21 @@ export class ComicService {
             id: 'ch-2-1',
             comicId: 'comic-2',
             chapterNumber: 1,
-            title: 'La Desaparición',
-            description: 'Alguien ha desaparecido en la ciudad.',
+            title: 'El Científico Perdido',
+            description: 'Un brillante investigador ha desaparecido misteriosamente del laboratorio.',
             pages: this.generatePages('ch-2-1', 6),
             publishDate: new Date('2024-07-10'),
-            isInteractive: false
+            isInteractive: true
           },
           {
             id: 'ch-2-2',
             comicId: 'comic-2',
             chapterNumber: 2,
-            title: 'La Verdad',
-            description: 'La verdad sale a la luz.',
+            title: 'La Torre Sombría',
+            description: 'Una aventura épica para rescatar a la princesa.',
             pages: this.generatePages('ch-2-2', 4),
             publishDate: new Date('2024-07-20'),
-            isInteractive: false
+            isInteractive: true
           }
         ]
       }
@@ -171,13 +178,78 @@ export class ComicService {
   private generatePages(chapterId: string, count: number): Page[] {
     const pages: Page[] = [];
     for (let i = 1; i <= count; i++) {
-      pages.push({
+      const page: Page = {
         id: `${chapterId}-page-${i}`,
         chapterId: chapterId,
         pageNumber: i,
-        imageUrl: `assets/comics/${chapterId.split('-')[1]}-${chapterId.split('-')[2]}/page${i}.jpg`,
+        imageUrl: `assets/comics/${chapterId}/page${i}.svg`,
         altText: `Página ${i} del capítulo`
-      });
+      };
+
+      // Add interactive elements for specific pages
+      if (chapterId === 'ch-1-2' && i === 2) {
+        // Interactive story element on page 2 of chapter 2
+        page.interactiveElements = [
+          {
+            id: 'story-choice-1',
+            type: 'interactive_story',
+            position: { x: 60, y: 70, width: 30, height: 20 },
+            storyId: 'space-adventure-mission-1',
+            title: 'Tomar una decisión',
+            description: 'Tu elección afectará el curso de la historia'
+          }
+        ];
+      } else if (chapterId === 'ch-1-3' && i === 3) {
+        // Interactive story element on page 3 of chapter 3
+        page.interactiveElements = [
+          {
+            id: 'story-choice-2',
+            type: 'interactive_story',
+            position: { x: 20, y: 60, width: 25, height: 15 },
+            storyId: 'space-adventure-encounter',
+            title: 'El encuentro crítico',
+            description: 'Una decisión que cambiará el destino'
+          }
+        ];
+      } else if (chapterId === 'ch-2-1' && i === 4) {
+        // Mystery story element for demonstration
+        page.interactiveElements = [
+          {
+            id: 'mystery-story-1',
+            type: 'interactive_story',
+            position: { x: 75, y: 80, width: 20, height: 10 },
+            storyId: 'mystery-investigation',
+            title: 'Investigar el misterio',
+            description: 'Resuelve el caso del científico desaparecido'
+          }
+        ];
+      } else if (chapterId === 'ch-2-2' && i === 2) {
+        // Fantasy adventure story element
+        page.interactiveElements = [
+          {
+            id: 'fantasy-story-1',
+            type: 'interactive_story',
+            position: { x: 40, y: 30, width: 35, height: 25 },
+            storyId: 'fantasy-adventure',
+            title: 'Embárcate en una aventura',
+            description: 'Rescata a la princesa de la Torre Sombría'
+          }
+        ];
+      } else if (chapterId === 'ch-1-1' && i === 3) {
+        // Link element for demonstration
+        page.interactiveElements = [
+          {
+            id: 'external-link-1',
+            type: 'link',
+            position: { x: 75, y: 80, width: 20, height: 10 },
+            url: 'https://github.com/inkle/ink',
+            title: 'Más sobre InkJS',
+            description: 'Aprende más sobre el motor de narrativa interactiva'
+          }
+        ];
+      }
+
+      pages.push(page);
     }
     return pages;
   }

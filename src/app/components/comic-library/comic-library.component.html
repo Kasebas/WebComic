@@ -1,79 +1,242 @@
-<div class="comic-library">
+<div class="library-container">
+  <!-- Header -->
   <header class="library-header">
-    <h1>Biblioteca de Cómics</h1>
-    
-    <!-- Barra de búsqueda -->
-    <div class="search-controls">
-      <div class="search-box">
-        <input 
-          type="text" 
-          [(ngModel)]="searchQuery" 
-          (input)="onSearch()" 
-          placeholder="Buscar cómics..."
-          class="search-input">
-        <button class="search-btn" (click)="onSearch()">🔍</button>
-      </div>
-      
-      <!-- Filtro por género -->
-      <select [(ngModel)]="selectedGenre" (change)="onGenreFilter()" class="genre-filter">
-        <option value="">Todos los géneros</option>
-        <option *ngFor="let genre of genres" [value]="genre">{{ genre }}</option>
-      </select>
-    </div>
-  </header>
+    <div class="header-content">
+      <h1 class="library-title">📚 Mi Biblioteca de Cómics</h1>
 
-  <!-- Grid de cómics -->
-  <div class="comics-grid">
-    <div 
-      *ngFor="let comic of comics$ | async" 
-      class="comic-card"
-      (click)="onComicSelect(comic)">
-      
-      <div class="comic-cover">
-        <img [src]="comic.coverImage" [alt]="comic.title" class="cover-image">
-        <div class="comic-status" [class]="comic.status">{{ comic.status }}</div>
-        
-        <!-- Indicador de progreso -->
-        <div *ngIf="getReadingProgress(comic.id)" class="progress-indicator">
-          <div class="progress-bar">
-            <div 
-              class="progress-fill" 
-              [style.width.%]="getProgressPercentage(comic)">
-            </div>
-          </div>
-          <span class="progress-text">{{ getProgressPercentage(comic) }}%</span>
+      <!-- Search Bar -->
+      <div class="search-container">
+        <div class="search-input-wrapper">
+          <input type="text" class="search-input" [value]="searchQuery" (input)="onSearchInput($event)"
+            placeholder="Buscar por título, autor o género...">
+          <button *ngIf="searchQuery" class="clear-search-btn" (click)="clearSearch()" title="Limpiar búsqueda">
+            ❌
+          </button>
         </div>
-      </div>
-      
-      <div class="comic-info">
-        <h3 class="comic-title">{{ comic.title }}</h3>
-        <p class="comic-author">por {{ comic.author }}</p>
-        <p class="comic-description">{{ comic.description }}</p>
-        
-        <div class="comic-meta">
-          <div class="genres">
-            <span *ngFor="let genre of comic.genres" class="genre-tag">{{ genre }}</span>
-          </div>
-          <div class="rating">
-            ⭐ {{ comic.rating }}/5
-          </div>
-          <div class="chapter-count">
-            {{ comic.chapters.length }}/{{ comic.totalChapters }} capítulos
-          </div>
-        </div>
-        
-        <!-- Botón de acción -->
-        <div class="action-button">
-          <button class="read-btn">
-            {{ getReadingProgress(comic.id) ? 'Continuar Leyendo' : 'Empezar a Leer' }}
+
+        <!-- Filter Toggle -->
+        <button class="filter-toggle-btn" (click)="toggleFilters()" [class.active]="showFilters" title="Filtros">
+          🔧
+        </button>
+
+        <!-- View Mode Toggle -->
+        <div class="view-mode-toggle">
+          <button class="view-btn" [class.active]="viewMode === 'grid'" (click)="setViewMode('grid')"
+            title="Vista de cuadrícula">
+            ⚏
+          </button>
+          <button class="view-btn" [class.active]="viewMode === 'list'" (click)="setViewMode('list')"
+            title="Vista de lista">
+            ≡
           </button>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Mensaje cuando no hay cómics -->
-  <div *ngIf="(comics$ | async)?.length === 0" class="no-comics">
-    <p>No se encontraron cómics que coincidan con tu búsqueda.</p>
-  </div>
+    <!-- Filters Panel -->
+    <div class="filters-panel" [class.visible]="showFilters">
+      <div class="filters-content">
+        <div class="filter-group">
+          <label for="genre-filter">Género:</label>
+          <select id="genre-filter" [(ngModel)]="selectedGenre" (change)="onGenreChange()" class="filter-select">
+            <option value="">Todos los géneros</option>
+            <option *ngFor="let genre of genres" [value]="genre">{{ genre }}</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="status-filter">Estado:</label>
+          <select id="status-filter" [(ngModel)]="selectedStatus" (change)="onStatusChange()" class="filter-select">
+            <option *ngFor="let option of statusOptions" [value]="option.value">
+              {{ option.label }}
+            </option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="sort-filter">Ordenar por:</label>
+          <select id="sort-filter" [(ngModel)]="sortBy" (change)="onSortChange()" class="filter-select">
+            <option *ngFor="let option of sortOptions" [value]="option.value">
+              {{ option.label }}
+            </option>
+          </select>
+        </div>
+
+        <button class="clear-filters-btn" (click)="clearFilters()">
+          Limpiar filtros
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Tabs Navigation -->
+  <nav class="tabs-nav">
+    <button class="tab-btn" [class.active]="activeTab === 'all'" (click)="setActiveTab('all')">
+      📖 Todos
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'continue'" (click)="setActiveTab('continue')">
+      📌 Continuar Leyendo
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'recent'" (click)="setActiveTab('recent')">
+      🕒 Recientes
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'favorites'" (click)="setActiveTab('favorites')">
+      ❤️ Favoritos
+    </button>
+  </nav>
+
+  <!-- Content Area -->
+  <main class="library-content">
+    <!-- All Comics Tab -->
+    <div *ngIf="activeTab === 'all'" class="tab-content">
+      <div class="comics-grid" [class.list-view]="viewMode === 'list'">
+        <div *ngFor="let comic of filteredComics$ | async" class="comic-card" (click)="onComicSelect(comic)">
+
+          <!-- Comic Cover -->
+          <div class="comic-cover">
+            <img [src]="comic.coverImage" [alt]="comic.title" loading="lazy">
+
+            <!-- Progress Bar -->
+            <div *ngIf="hasProgress(comic)" class="progress-bar">
+              <div class="progress-fill" [style.width.%]="getProgressPercentage(comic)"></div>
+            </div>
+
+            <!-- Status Badge -->
+            <div class="status-badge" [style.background-color]="getStatusColor(comic.status)">
+              {{ getStatusLabel(comic.status) }}
+            </div>
+
+            <!-- Favorite Button -->
+            <button class="favorite-btn" [class.active]="isFavorite(comic)" (click)="toggleFavorite(comic, $event)"
+              title="Agregar a favoritos">
+              {{ isFavorite(comic) ? '❤️' : '🤍' }}
+            </button>
+          </div>
+
+          <!-- Comic Info -->
+          <div class="comic-info">
+            <h3 class="comic-title">{{ comic.title }}</h3>
+            <p class="comic-author">por {{ comic.author }}</p>
+            <p class="comic-description">{{ comic.description }}</p>
+
+            <!-- Genres -->
+            <div class="comic-genres">
+              <span *ngFor="let genre of comic.genres" class="genre-tag">
+                {{ genre }}
+              </span>
+            </div>
+
+            <!-- Rating and Chapters -->
+            <div class="comic-metadata">
+              <span class="rating">⭐ {{ comic.rating }}</span>
+              <span class="chapters">📚 {{ comic.totalChapters }} caps.</span>
+              <span *ngIf="isCompleted(comic)" class="completed-badge">✅ Completado</span>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+              <button *ngIf="hasProgress(comic)" class="action-btn continue-btn"
+                (click)="continueReading(comic, $event)">
+                📖 Continuar
+              </button>
+              <button class="action-btn start-btn" (click)="readFromBeginning(comic, $event)">
+                {{ hasProgress(comic) ? '🔄 Reiniciar' : '▶️ Leer' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="(filteredComics$ | async)?.length === 0" class="empty-state">
+        <div class="empty-content">
+          <h3>😔 No se encontraron cómics</h3>
+          <p>Intenta ajustar tus filtros de búsqueda o agrega nuevos cómics a tu biblioteca.</p>
+          <button class="action-btn" (click)="clearFilters()">Limpiar filtros</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Continue Reading Tab -->
+    <div *ngIf="activeTab === 'continue'" class="tab-content">
+      <div class="comics-grid" [class.list-view]="viewMode === 'list'">
+        <div *ngFor="let comic of continueReading$ | async" class="comic-card" (click)="continueReading(comic, $event)">
+
+          <div class="comic-cover">
+            <img [src]="comic.coverImage" [alt]="comic.title" loading="lazy">
+            <div class="progress-bar">
+              <div class="progress-fill" [style.width.%]="getProgressPercentage(comic)"></div>
+            </div>
+            <div class="continue-badge">📖 {{ getProgressPercentage(comic) }}%</div>
+          </div>
+
+          <div class="comic-info">
+            <h3 class="comic-title">{{ comic.title }}</h3>
+            <p class="comic-author">por {{ comic.author }}</p>
+            <div class="progress-info">
+              <span>Progreso: {{ getProgressPercentage(comic) }}%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="(continueReading$ | async)?.length === 0" class="empty-state">
+        <div class="empty-content">
+          <h3>📖 No hay cómics para continuar</h3>
+          <p>Una vez que empieces a leer cómics, aparecerán aquí para que puedas continuar donde lo dejaste.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Tab -->
+    <div *ngIf="activeTab === 'recent'" class="tab-content">
+      <div class="comics-grid" [class.list-view]="viewMode === 'list'">
+        <div *ngFor="let comic of recentlyRead$ | async" class="comic-card" (click)="onComicSelect(comic)">
+
+          <div class="comic-cover">
+            <img [src]="comic.coverImage" [alt]="comic.title" loading="lazy">
+            <div class="recent-badge">🕒 Reciente</div>
+          </div>
+
+          <div class="comic-info">
+            <h3 class="comic-title">{{ comic.title }}</h3>
+            <p class="comic-author">por {{ comic.author }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="(recentlyRead$ | async)?.length === 0" class="empty-state">
+        <div class="empty-content">
+          <h3>🕒 No hay cómics recientes</h3>
+          <p>Los cómics que hayas leído recientemente aparecerán aquí.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Favorites Tab -->
+    <div *ngIf="activeTab === 'favorites'" class="tab-content">
+      <div class="comics-grid" [class.list-view]="viewMode === 'list'">
+        <div *ngFor="let comic of favorites$ | async" class="comic-card" (click)="onComicSelect(comic)">
+
+          <div class="comic-cover">
+            <img [src]="comic.coverImage" [alt]="comic.title" loading="lazy">
+            <div class="favorite-badge">❤️ Favorito</div>
+          </div>
+
+          <div class="comic-info">
+            <h3 class="comic-title">{{ comic.title }}</h3>
+            <p class="comic-author">por {{ comic.author }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="(favorites$ | async)?.length === 0" class="empty-state">
+        <div class="empty-content">
+          <h3>❤️ No tienes favoritos</h3>
+          <p>Marca tus cómics favoritos para encontrarlos fácilmente aquí.</p>
+        </div>
+      </div>
+    </div>
+  </main>
 </div>

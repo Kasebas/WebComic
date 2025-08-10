@@ -1,74 +1,146 @@
-<div class="comic-viewer" *ngIf="!isLoading">
-  <!-- Header con información del cómic -->
-  <header class="comic-header">
-    <button class="back-btn" (click)="backToLibrary()">← Biblioteca</button>
-    <div class="comic-info">
-      <h2 class="comic-title">{{ comic?.title }}</h2>
-      <h3 class="chapter-title" *ngIf="currentChapter">
-        Capítulo {{ currentChapter.chapterNumber }}: {{ currentChapter.title }}
-      </h3>
-    </div>
-    <div class="page-counter">
-      {{ getCurrentPageNumber() }} / {{ getTotalPages() }}
-    </div>
-  </header>
-
-  <!-- Visor principal -->
-  <div class="viewer-container">
-    <swiper-container 
-      [config]="swiperConfig" 
-      (slidechange)="onSlideChange($event)"
-      [initial-slide]="currentPageIndex">
-      
-      <swiper-slide *ngFor="let page of currentChapter?.pages">
-        <div class="page-container">
-          <img 
-            [src]="page.imageUrl" 
-            [alt]="page.altText || 'Página ' + page.pageNumber"
-            class="comic-page" 
-            loading="lazy">
-          
-          <!-- Elementos interactivos si los hay -->
-          <div 
-            *ngFor="let element of page.interactiveElements" 
-            class="interactive-element"
-            [style.left.%]="element.position.x"
-            [style.top.%]="element.position.y"
-            [style.width.%]="element.position.width"
-            [style.height.%]="element.position.height">
-            <!-- Aquí irían los elementos interactivos -->
-          </div>
-        </div>
-      </swiper-slide>
-    </swiper-container>
+<div class="comic-viewer" #comicViewer [class.fullscreen]="readingSettings.isFullscreen">
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Cargando cómic...</p>
   </div>
 
-  <!-- Controles de navegación entre capítulos -->
-  <footer class="comic-controls">
-    <button 
-      class="chapter-nav-btn prev"
-      [disabled]="isFirstChapter()"
-      (click)="goToPreviousChapter()">
-      ← Capítulo Anterior
-    </button>
-    
-    <div class="chapter-info">
-      <span *ngIf="currentChapter">
-        Capítulo {{ currentChapter.chapterNumber }} de {{ comic?.totalChapters }}
-      </span>
-    </div>
-    
-    <button 
-      class="chapter-nav-btn next"
-      [disabled]="isLastChapter()"
-      (click)="goToNextChapter()">
-      Siguiente Capítulo →
-    </button>
-  </footer>
-</div>
+  <!-- Comic Content -->
+  <div *ngIf="!isLoading && comic && currentChapter" class="comic-content">
+    <!-- Top Controls -->
+    <div class="top-controls" [class.hidden]="!showControls">
+      <div class="left-section">
+        <button class="control-btn back-btn" (click)="backToLibrary()" title="Volver a la biblioteca">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 7v4H5.83l3.58-3.59L8 6l-6 6 6 6 1.41-1.41L5.83 13H21V7z" />
+          </svg>
+          Biblioteca
+        </button>
+        <div class="comic-info">
+          <h1>{{ comic.title }}</h1>
+          <p>{{ currentChapter.title }} - Página {{ getCurrentPageNumber() }} de {{ getTotalPages() }}</p>
+        </div>
+      </div>
 
-<!-- Loading state -->
-<div class="loading-container" *ngIf="isLoading">
-  <div class="loading-spinner"></div>
-  <p>Cargando cómic...</p>
+      <div class="right-section">
+        <!-- Reading Mode Controls -->
+        <div class="reading-mode-controls">
+          <button class="control-btn" [class.active]="userPreferences.readingMode === 'single'"
+            (click)="setReadingMode('single')" title="Página única">
+            📄
+          </button>
+          <button class="control-btn" [class.active]="userPreferences.readingMode === 'double'"
+            (click)="setReadingMode('double')" title="Doble página">
+            📖
+          </button>
+          <button class="control-btn" [class.active]="userPreferences.readingMode === 'scroll'"
+            (click)="setReadingMode('scroll')" title="Scroll continuo">
+            📜
+          </button>
+        </div>
+
+        <!-- Zoom Controls -->
+        <div class="zoom-controls">
+          <button class="control-btn" (click)="zoomOut()" title="Alejar (-)">🔍-</button>
+          <span class="zoom-level">{{ readingSettings.currentZoom }}%</span>
+          <button class="control-btn" (click)="zoomIn()" title="Acercar (+)">🔍+</button>
+          <button class="control-btn" (click)="resetZoom()" title="Zoom original (0)">↻</button>
+        </div>
+
+        <!-- Fit Mode Controls -->
+        <div class="fit-controls">
+          <button class="control-btn" [class.active]="readingSettings.fitMode === 'width'" (click)="setFitMode('width')"
+            title="Ajustar al ancho">
+            ↔️
+          </button>
+          <button class="control-btn" [class.active]="readingSettings.fitMode === 'height'"
+            (click)="setFitMode('height')" title="Ajustar a la altura">
+            ↕️
+          </button>
+          <button class="control-btn" [class.active]="readingSettings.fitMode === 'original'"
+            (click)="setFitMode('original')" title="Tamaño original">
+            🔲
+          </button>
+        </div>
+
+        <!-- Fullscreen Toggle -->
+        <button class="control-btn fullscreen-btn" (click)="toggleFullscreen()" title="Pantalla completa (F)">
+          {{ readingSettings.isFullscreen ? '🗗' : '🗖' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Swiper Container -->
+    <div class="swiper-wrapper">
+      <swiper-container #swiperContainer [config]="swiperConfig" (slidechange)="onSlideChange($event)">
+
+        <swiper-slide *ngFor="let page of currentChapter.pages; let i = index">
+          <div class="page-container" (click)="toggleControls()">
+            <img [src]="page.imageUrl" [alt]="page.altText || 'Página ' + (i + 1)" [ngStyle]="getImageStyle()"
+              class="comic-page" loading="lazy">
+
+            <!-- Interactive elements if any -->
+            <div *ngIf="page.interactiveElements" class="interactive-overlay">
+              <div *ngFor="let element of page.interactiveElements" class="interactive-element"
+                [attr.data-type]="element.type" [style.left.%]="element.position.x" [style.top.%]="element.position.y"
+                [style.width.%]="element.position.width" [style.height.%]="element.position.height"
+                [title]="element.title || 'Elemento interactivo'" (click)="onInteractiveElementClick(element)">
+              </div>
+            </div>
+          </div>
+        </swiper-slide>
+      </swiper-container>
+
+      <!-- Custom Navigation -->
+      <div class="swiper-button-prev" [class.hidden]="!showControls"></div>
+      <div class="swiper-button-next" [class.hidden]="!showControls"></div>
+      <div class="swiper-pagination" [class.hidden]="!showControls"></div>
+    </div>
+
+    <!-- Bottom Controls -->
+    <div class="bottom-controls" [class.hidden]="!showControls">
+      <div class="chapter-navigation">
+        <button class="control-btn" (click)="goToPreviousChapter()" [disabled]="isFirstChapter()"
+          title="Capítulo anterior">
+          ⏮️ Cap. Anterior
+        </button>
+
+        <div class="page-info">
+          <span>{{ getCurrentPageNumber() }} / {{ getTotalPages() }}</span>
+        </div>
+
+        <button class="control-btn" (click)="goToNextChapter()" [disabled]="isLastChapter()" title="Siguiente capítulo">
+          Cap. Siguiente ⏭️
+        </button>
+      </div>
+    </div>
+
+    <!-- Keyboard Shortcuts Help -->
+    <div class="shortcuts-help" [class.visible]="showControls">
+      <small>
+        ← → Páginas | F: Pantalla completa | +/- Zoom | 0: Reset zoom | ESC: Salir
+      </small>
+    </div>
+  </div>
+
+  <!-- Interactive Story Overlay -->
+  <div *ngIf="showInteractiveStory" class="interactive-story-overlay">
+    <div class="story-overlay-content">
+      <button class="close-story-btn" (click)="closeInteractiveStory()" title="Cerrar historia interactiva">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+        </svg>
+      </button>
+      <app-interactive-story *ngIf="currentStoryId" [storyId]="currentStoryId">
+      </app-interactive-story>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="!isLoading && !comic" class="error-container">
+    <h2>Error al cargar el cómic</h2>
+    <p>No se pudo encontrar el cómic solicitado.</p>
+    <button class="control-btn" (click)="backToLibrary()">Volver a la biblioteca</button>
+  </div>
 </div>
