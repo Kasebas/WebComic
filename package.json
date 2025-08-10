@@ -18,7 +18,10 @@
     "@angular/platform-browser": "^17.1.0",
     "@angular/platform-browser-dynamic": "^17.1.0",
     "@angular/router": "^17.1.0",
+    "@types/swiper": "^6.0.0",
+    "inkjs": "^2.3.1",
     "rxjs": "~7.8.0",
+    "swiper": "^9.4.1",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"
   },

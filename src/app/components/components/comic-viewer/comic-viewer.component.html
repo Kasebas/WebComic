@@ -1,0 +1,5 @@
+<swiper-container [config]="swiperConfig">
+  <swiper-slide *ngFor="let page of comicPages">
+    <img [src]="page" class="comic-page" alt="Comic Page">
+  </swiper-slide>
+</swiper-container>
