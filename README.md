@@ -1,6 +1,15 @@
-# Webcomic
+# WebComic
+
+Este proyecto es una web para leer cómics desarrollada con Angular, con posibilidad de leer cómics interactivos.
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.1.1.
+
+## Características
+
+- Visor de cómics con navegación tipo carrusel usando Swiper
+- Soporte para cómics interactivos con InkJS
+- Diseño responsivo para móviles y tablets
+- Componentes standalone de Angular 17
 
 ## Development server
 
